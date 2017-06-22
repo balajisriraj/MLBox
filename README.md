@@ -100,9 +100,9 @@ How to Contribute
 MLBox has been developed and used by many active community members. Your help is very valuable to make it better for everyone.
 
 - Check out [call for contributions](https://github.com/AxeldeRomblay/MLBox/labels/call-for-contributions) to see what can be improved, or open an issue if you want something.
-- Contribute to the [tests](https://github.com/AxeldeRomblay/MLBox/tree/master/tests) to make it more reliable. 
-- Contribute to the [documents](https://github.com/AxeldeRomblay/MLBox/tree/master/docs) to make it clearer for everyone.
-- Contribute to the [examples](https://github.com/AxeldeRomblay/MLBox/tree/master/examples) to share your experience with other users.
+- Contribute to the [tests](https://github.com/AxeldeRomblay/MLBox/tree/dev/tests) to make it more reliable. 
+- Contribute to the [documents](https://github.com/AxeldeRomblay/MLBox/tree/dev/docs) to make it clearer for everyone.
+- Contribute to the [examples](https://github.com/AxeldeRomblay/MLBox/tree/dev/examples) to share your experience with other users.
 - Open issue if you met problems during development.
 
-For more details, please refer to [CONTRIBUTING](https://github.com/AxeldeRomblay/MLBox/blob/master/CONTRIBUTING.rst).
+For more details, please refer to [CONTRIBUTING](https://github.com/AxeldeRomblay/MLBox/blob/dev/CONTRIBUTING.rst).
