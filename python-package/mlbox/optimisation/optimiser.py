@@ -53,16 +53,20 @@ class Optimiser():
     random_state : int, defaut = 1
         pseudo-random number generator state used for shuffling
 
+    to_path : str, defaut = "save"
+        Name of the folder where models are saved
+
     verbose : bool, defaut = True
         Verbose mode
 
     """
 
-    def __init__(self, scoring = None, n_folds = 2, random_state = 1, verbose = True):
+    def __init__(self, scoring = None, n_folds = 2, random_state = 1, to_path = "save", verbose = True):
 
         self.scoring = scoring
         self.n_folds = n_folds
         self.random_state = random_state
+        self.to_path = to_path
         self.verbose = verbose
 
 
@@ -87,7 +91,7 @@ class Optimiser():
 
     def evaluate(self, params, df):
 
-        '''
+        """
 
         Evaluates the scoring function with given hyper-parameters of the whole Pipeline. If no parameters are set, defaut configuration for each step is evaluated : no feature selection is applied and no meta features are created.
 
@@ -125,7 +129,7 @@ class Optimiser():
             The score. The higher the better (positive for a score and negative for a loss)
 
 
-        '''
+        """
 
 
         ne = NA_encoder()
@@ -148,7 +152,7 @@ class Optimiser():
             classes_to_drop = counts[counts<self.n_folds].index
             indexes_to_drop = df['target'][df['target'].apply(lambda x: x in classes_to_drop)].index
 
-            cv = StratifiedKFold(n_splits = self.n_folds, shuffle=True,random_state=self.random_state)
+            cv = StratifiedKFold(n_splits=self.n_folds, shuffle=True, random_state=self.random_state)
 
             ### estimator ###
             est = Classifier()
@@ -190,7 +194,6 @@ class Optimiser():
                     else:
                         warnings.warn("Invalid scoring metric. log_loss is used instead.")
                         self.scoring = 'log_loss'
-
                 else:
                     pass
 
@@ -203,7 +206,7 @@ class Optimiser():
             ### cross validation ###
 
             indexes_to_drop = []
-            cv = KFold(n_splits = self.n_folds, shuffle=True,random_state=self.random_state)
+            cv = KFold(n_splits=self.n_folds, shuffle=True, random_state=self.random_state)
 
             ### estimator ###
             est = Regressor()
@@ -252,6 +255,36 @@ class Optimiser():
 
         pipe = [("ne",ne),("ce",ce)]
 
+        ### do we need to cache transformers ###
+
+        cache = False
+
+        if (params is not None):
+            if("ce__strategy" in params):
+                if(params["ce__strategy"] == "entity_embedding"):
+                    cache = True
+                else:
+                    pass
+            else:
+                pass
+
+        if(fs is not None):
+            if ("fs__strategy" in params):
+                if(params["fs__strategy"] != "variance"):
+                    cache = True
+                else:
+                    pass
+        else:
+            pass
+
+        if(len(STCK)!=0):
+            cache = True
+        else:
+            pass
+
+
+        ### pipeline creation ###
+
         if(fs is not None):
             pipe.append(("fs",fs))
         else:
@@ -261,7 +294,11 @@ class Optimiser():
             pipe.append((stck,STCK[stck]))
 
         pipe.append(("est",est))
-        pp = Pipeline(pipe)
+
+        if(cache):
+            pp = Pipeline(pipe, memory = self.to_path)
+        else:
+            pp = Pipeline(pipe)
 
 
         ############################################################
@@ -270,8 +307,9 @@ class Optimiser():
 
         start_time = time.time()
 
+
         ### no params : defaut config ###
-        if(params is None):
+        if (params is None):
             set_params = True
             print('No parameters set. Default configuration is tested')
 
@@ -282,43 +320,43 @@ class Optimiser():
             except:
                 set_params = False
 
-        if(set_params):
+        if (set_params):
 
-
-            if(self.verbose):
+            if (self.verbose):
                 print("")
                 print("########################################################## testing hyper-parameters... #################################################################")
                 print("")
-                print(">>> NA ENCODER :"+str(ne.get_params()))
+                print(">>> NA ENCODER :" + str(ne.get_params()))
                 print("")
-                print(">>> CA ENCODER :"+str({'strategy': ce.strategy}))
+                print(">>> CA ENCODER :" + str({'strategy': ce.strategy}))
 
-                if(fs is not None):
+                if (fs is not None):
                     print("")
-                    print(">>> FEATURE SELECTOR :"+str(fs.get_params()))
+                    print(">>> FEATURE SELECTOR :" + str(fs.get_params()))
 
                 for i, stck in enumerate(np.sort(STCK.keys())):
 
                     stck_params = STCK[stck].get_params().copy()
-                    stck_params_display = {k:stck_params[k] for k in stck_params.keys() if k not in ["level_estimator", "verbose", "base_estimators"]}
+                    stck_params_display = {k: stck_params[k] for k in stck_params.keys() if k not in ["level_estimator", "verbose", "base_estimators"]}
 
                     print("")
-                    print(">>> STACKING LAYER n°"+str(i+1)+" :"+str(stck_params_display))
+                    print(">>> STACKING LAYER n°" + str(i + 1) + " :" + str(stck_params_display))
                     for j, model in enumerate(stck_params["base_estimators"]):
                         print("")
-                        print("    > base_estimator n°"+str(j+1)+" :"+str(dict(model.get_params().items()+model.get_estimator().get_params().items())))
+                        print("    > base_estimator n°" + str(j + 1) + " :" + str(dict(model.get_params().items() + model.get_estimator().get_params().items())))
 
                 print("")
-                print(">>> ESTIMATOR :"+str(dict(est.get_params().items()+est.get_estimator().get_params().items())))
+                print(">>> ESTIMATOR :" + str(dict(est.get_params().items() + est.get_estimator().get_params().items())))
                 print("")
 
             try:
 
                 ### computing the mean cross validation score across the folds ###
-                scores = cross_val_score(estimator = pp, X = df['train'].drop(indexes_to_drop), y = df['target'].drop(indexes_to_drop), scoring = self.scoring, cv = cv)
+                scores = cross_val_score(estimator=pp, X=df['train'].drop(indexes_to_drop), y=df['target'].drop(indexes_to_drop), scoring=self.scoring, cv=cv)
                 score = np.mean(scores)
 
             except:
+
                 scores = [-np.inf for fold in range(self.n_folds)]
                 score = -np.inf
         else:
@@ -337,6 +375,8 @@ class Optimiser():
         for i, s in enumerate(scores[:-1]):
             out = out+"fold "+str(i+1)+" = "+str(s)+", "
 
+        out = out+"fold "+str(len(scores))+" = "+str(scores[-1])+")"
+
         if(auc):
             self.scoring = "roc_auc"
 
@@ -349,6 +389,7 @@ class Optimiser():
 
 
         return score
+
 
 
 
