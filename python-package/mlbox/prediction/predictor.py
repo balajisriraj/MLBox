@@ -231,11 +231,40 @@ class Predictor():
                 raise ValueError("Impossible to determine the task. Please check that your target is encoded.")
 
 
-            #############################################################
-            ##################### creating the pipeline #################
-            #############################################################
+            ############################################################
+            ##################### creating the pipeline ##################
+            ############################################################
 
             pipe = [("ne",ne),("ce",ce)]
+
+            ### do we need to cache transformers ###
+
+            cache = False
+
+            if (params is not None):
+                if("ce__strategy" in params):
+                    if(params["ce__strategy"] == "entity_embedding"):
+                        cache = True
+                    else:
+                        pass
+                else:
+                    pass
+
+            if(fs is not None):
+                if ("fs__strategy" in params):
+                    if(params["fs__strategy"] != "variance"):
+                        cache = True
+                    else:
+                        pass
+            else:
+                pass
+
+            if(len(STCK)!=0):
+                cache = True
+            else:
+                pass
+
+            ### pipeline creation ###
 
             if(fs is not None):
                 pipe.append(("fs",fs))
@@ -246,12 +275,21 @@ class Predictor():
                 pipe.append((stck,STCK[stck]))
 
             pipe.append(("est",est))
-            pp = Pipeline(pipe)
+
+            if(cache):
+                pp = Pipeline(pipe, memory = self.to_path)
+            else:
+                pp = Pipeline(pipe)
 
 
             #############################################################
             #################### fitting the pipeline ###################
             #############################################################
+
+            try:
+                os.mkdir(self.to_path)
+            except OSError:
+                pass
 
             start_time = time.time()
 
@@ -278,12 +316,9 @@ class Predictor():
                     pp.fit(df['train'], df['target'])
 
                     if(self.verbose):
+                        if(cache):
+                            print("pipeline dumped into directory : " + self.to_path+"/joblib")
                         print("CPU time: %s seconds" % (time.time() - start_time))
-
-                    try:
-                        os.mkdir(self.to_path)
-                    except OSError:
-                        pass
 
 
                     ### feature importances ###
