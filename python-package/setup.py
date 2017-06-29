@@ -22,7 +22,7 @@ with open('README.md') as readme_file:
     readme = readme_file.read()
 
 with open('HISTORY.rst') as history_file:
-history = history_file.read()
+    history = history_file.read()
 
 requirements = [
     "numpy>=1.13.0",
