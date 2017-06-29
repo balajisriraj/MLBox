@@ -1,13 +1,28 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import pip
 from setuptools import setup
+from setuptools.command.install import install
+from pip.req import parse_requirements
+
+install_reqs = parse_requirements("./requirements.txt", session=False)
+reqs = [str(ir.req) for ir in install_reqs]
+
+class OverrideInstallCommand(install):
+    def run(self):
+	# Install all requirements
+        for req in reqs:
+            pip.main(["install", req])
+
+	# install MlBox
+        install.run(self)
 
 with open('README.md') as readme_file:
     readme = readme_file.read()
 
 with open('HISTORY.rst') as history_file:
-    history = history_file.read()
+history = history_file.read()
 
 requirements = [
     "numpy>=1.13.0",
@@ -62,6 +77,7 @@ setup(
                  'mlbox.preprocessing.drift':'mlbox/preprocessing/drift'
                  },
     include_package_data=True,
+    cmdclass={'install': OverrideInstallCommand},
     install_requires=requirements,
     zip_safe=False,
     keywords='mlbox',
