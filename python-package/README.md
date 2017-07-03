@@ -3,8 +3,7 @@ MLBox, Machine Learning Box
 
 __MLBox is a powerful Automated Machine Learning python library.__
 
-_It is compatible with:_ __Python 2.7__. (Python 3.3-3.6 very soon...) | __64-bit version only__ (32-bit python is not supported)
-
+_It is compatible with:_ __Python 2.7__. (Python 3.3-3.6 very soon...) & __64-bit version only__ (32-bit python is not supported) <br/>
 _Operating system:_ __Linux__. (MacOS & Windows very soon...)
 
 
