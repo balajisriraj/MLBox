@@ -9,13 +9,25 @@ from pip.req import parse_requirements
 install_reqs = parse_requirements("./requirements.txt", session=False)
 reqs = [str(ir.req) for ir in install_reqs]
 
+
 class OverrideInstallCommand(install):
     def run(self):
-	# Install all requirements
-        for req in reqs:
-            pip.main(["install", req])
+        # Install all requirements
+        failed = []
 
-	# install MlBox
+        for req in reqs:
+            if pip.main(["install", req]) == 1:
+                failed.append(req)
+
+        if len(failed) > 0:
+            print("")
+            print("Error installing the following packages:")
+            print(str(failed))
+            print("Please install them manually")
+            print("")
+            return 1
+
+        # install MlBox
         install.run(self)
 
 with open('README.md') as readme_file:
