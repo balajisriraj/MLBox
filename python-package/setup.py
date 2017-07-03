@@ -9,7 +9,6 @@ from pip.req import parse_requirements
 install_reqs = parse_requirements("./requirements.txt", session=False)
 reqs = [str(ir.req) for ir in install_reqs]
 
-
 class OverrideInstallCommand(install):
     def run(self):
         # Install all requirements
