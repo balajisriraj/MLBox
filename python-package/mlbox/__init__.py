@@ -2,7 +2,7 @@
 
 __author__ = """Axel ARONIO DE ROMBLAY"""
 __email__ = 'axelderomblay@gmail.com'
-__version__ = '0.2.3-dev'
+__version__ = '0.4.0-dev'
 
 from .preprocessing import *
 from .encoding import *
