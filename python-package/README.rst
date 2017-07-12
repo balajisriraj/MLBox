@@ -25,8 +25,8 @@ First, make sure you have `setuptools <https://pypi.python.org/pypi/setuptools>`
     $ pip install cmake
    
 
-## Dev version
-
+Dev version
+-----------
 
 A **4.0 dev-version for MLBox is also available** on the branch `"4.0-dev" <https://github.com/AxeldeRomblay/MLBox/tree/4.0-dev>`__ ! It provides some interesting new features. Please refer to `HISTORY <https://github.com/AxeldeRomblay/MLBox/blob/master/HISTORY.rst>`__. 
 
