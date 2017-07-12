@@ -11,7 +11,7 @@ __MLBox is a powerful Automated Machine Learning python library.__ It provides t
 - Prediction with models interpretation 
 
 
-__To get it installed__, please refer to [README](https://github.com/AxeldeRomblay/MLBox/blob/4.0-dev/python-package/README.md)
+__To get it installed__, please refer to [README](https://github.com/AxeldeRomblay/MLBox/blob/4.0-dev/python-package/README.rst)
 
 __For more details__, please refer to [docs](https://github.com/AxeldeRomblay/MLBox/tree/4.0-dev/docs/documentation.md)
 
