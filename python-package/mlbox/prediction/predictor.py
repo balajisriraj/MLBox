@@ -1,4 +1,3 @@
-
 # coding: utf-8
 # Author: Axel ARONIO DE ROMBLAY <axelderomblay@gmail.com>
 # License: BSD 3 clause
@@ -30,17 +29,17 @@ class Predictor():
 
     """
     Predicts the target on the test dataset.
-
-
+    
+    
     Parameters
     ----------
-
+    
     to_path : str, defaut = "save"
         Name of the folder where feature importances and predictions are saved (.png and .csv formats). Must contain target encoder object (for classification task only).
-
+    
     verbose : bool, defaut = True
         Verbose mode
-
+    
     """
 
     def __init__(self, to_path = "save", verbose = True):
@@ -67,7 +66,7 @@ class Predictor():
 
 
     def __plot_feature_importances(self, importance, fig_name = "feature_importance.png"):
-        
+
         """
         Saves feature importances plot
         
@@ -86,11 +85,11 @@ class Predictor():
         
         None
         """
-
+        
         if(len(importance)>0):
 
             ### plot feature importances
-            tuples = [(k, np.round(importance[k]*100./np.sum(importance.values()),2)) for k in importance]
+            tuples = [(k, np.round(importance[k]*100./np.sum(list(importance.values())),2)) for k in importance]
             tuples = sorted(tuples, key=lambda x: x[1])
             labels, values = zip(*tuples)
             plt.figure(figsize=(20,int(len(importance)*0.3)+1))
@@ -120,44 +119,40 @@ class Predictor():
 
 
         '''
-
         Fits the model. Then predicts on test dataset and outputs feature importances and the submission file (.png and .csv format).
-
-
+        
+        
         Parameters
         ----------
-
+        
         params : dict, defaut = None.
             Hyper-parameters dictionnary for the whole pipeline. If params = None, defaut configuration is evaluated.
-
+            
             - The keys must respect the following syntax : "enc__param".
-
+            
             With :
                 1/ "enc" = "ne" for na encoder
                 2/ "enc" = "ce" for categorical encoder
                 3/ "enc" = "fs" for feature selector [OPTIONAL]
                 4/ "enc" = "stck"+str(i) to add layer n°i of meta-features (assuming 1 ... i-1 layers are created...) [OPTIONAL]
                 5/ "enc" = "est" for the final estimator
-
+            
             And:
                 "param" : a correct associated parameter for each step. (for example : "max_depth" for "enc"="est", "entity_embedding" for "enc"="ce")
-
+            
             - The values are those of the parameters (for example : 4 for a key = "est__max_depth")
-
-
+        
+        
         df : dict, defaut = None
             Dataset dictionnary. Must contain keys "train", "test" and "target" with the train dataset (pandas DataFrame), the test dataset (pandas DataFrame) and the associated
             target (pandas Serie with dtype='float' for a regression or dtype='int' for a classification) resp.
-
-
+        
+        
         Returns
         -------
-
+        
         None
-
         '''
-
-
 
         if(self.to_path is None):
             raise ValueError("You must specify a path to save your model and your predictions")
@@ -271,7 +266,7 @@ class Predictor():
             else:
                 pass
 
-            for stck in np.sort(STCK.keys()):
+            for stck in np.sort(list(STCK)):
                 pipe.append((stck,STCK[stck]))
 
             pipe.append(("est",est))
@@ -285,11 +280,6 @@ class Predictor():
             #############################################################
             #################### fitting the pipeline ###################
             #############################################################
-
-            try:
-                os.mkdir(self.to_path)
-            except OSError:
-                pass
 
             start_time = time.time()
 
@@ -316,9 +306,12 @@ class Predictor():
                     pp.fit(df['train'], df['target'])
 
                     if(self.verbose):
-                        if(cache):
-                            print("pipeline dumped into directory : " + self.to_path+"/joblib")
                         print("CPU time: %s seconds" % (time.time() - start_time))
+
+                    try:
+                        os.mkdir(self.to_path)
+                    except OSError:
+                        pass
 
 
                     ### feature importances ###
@@ -351,7 +344,7 @@ class Predictor():
 
                     try:
 
-                        fhand = open(self.to_path+"/target_encoder.obj", 'r')
+                        fhand = open(self.to_path+"/target_encoder.obj", 'rb')
                         enc = pickle.load(fhand)
                         fhand.close()
 
@@ -365,6 +358,7 @@ class Predictor():
 
                         pred = pd.DataFrame(pp.predict_proba(df['test']),columns = enc.inverse_transform(range(len(enc.classes_))), index = df['test'].index)
                         pred[df['target'].name+"_predicted"] = pred.idxmax(axis=1)
+                        
                         try:
                             pred[df['target'].name+"_predicted"] = pred[df['target'].name+"_predicted"].apply(int)
                         except:
@@ -416,4 +410,5 @@ class Predictor():
 
                 pred.to_csv(self.to_path+"/"+df['target'].name+"_predictions.csv",index=True)
 
+                
         return self
