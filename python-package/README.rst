@@ -1,24 +1,24 @@
 MLBox, Machine Learning Box
 ===========================
 
-__MLBox is a powerful Automated Machine Learning python library.__
+**MLBox is a powerful Automated Machine Learning python library.**
 
 * *It is compatible with:* **Python 2.7, 3.4 - 3.6**. & **64-bit version only** (32-bit python is not supported)
 * *Operating system:* **Linux**. (MacOS & Windows very soon...)
 
 
-## Preparation 
+Preparation 
+-----------
 
-First, make sure you have [setuptools](https://pypi.python.org/pypi/setuptools) installed. <br/>
-Since MLBox package contains C++ source code, check that the following requirements are installed, otherwise please proceed below: 
+First, make sure you have `setuptools <https://pypi.python.org/pypi/setuptools>`__ installed. Since MLBox package contains C++ source code, check that the following requirements are installed: 
 
-* **[gcc](https://gcc.gnu.org/)** 
+* `gcc <https://gcc.gnu.org/>`__ 
 
 .. code-block:: console
 
     $ sudo apt-get install build-essential
     
-* **[cmake](https://cmake.org/)** : 
+* `cmake <https://cmake.org/>`__  
 
 .. code-block:: console
 
@@ -28,7 +28,9 @@ Since MLBox package contains C++ source code, check that the following requireme
 ## Dev version
 
 
-A 2.3 dev-version for MLBox is also available on the __branch "2.3-dev"__ ! It provides some interesting new features. Please refer to [HISTORY](https://github.com/AxeldeRomblay/MLBox/blob/master/HISTORY.rst). __It depends on sklearn-0.19.dev0 which is not a stable version at the moment.__
+A **4.0 dev-version for MLBox is also available** on the branch `"4.0-dev" <https://github.com/AxeldeRomblay/MLBox/tree/4.0-dev>`__ ! It provides some interesting new features. Please refer to `HISTORY <https://github.com/AxeldeRomblay/MLBox/blob/master/HISTORY.rst>`__. 
+
+**It depends on sklearn-0.19.dev0 which is not a stable version at the moment.**
 
 If you want, you can have a try: 
 
@@ -40,8 +42,8 @@ If you want, you can have a try:
         $ cd scikit-learn-master/
         $ python setup.py install 
 
-* Clone or download MLBox-2.3.dev0 from the '2.3-dev' branch. 
-* Install MLBox-2.3.dev0: 
+* Clone or download MLBox-4.0.dev from the '4.0-dev' branch. 
+* Install MLBox-4.0.dev: 
 
     .. code-block:: console
 
