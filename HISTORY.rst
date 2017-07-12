@@ -26,15 +26,19 @@ History
 ------------------
 * add of feature importances for bagging and boosting meta-models.
 
-0.2.2 (official release : 2017-06-13, available on branch "master")
--------------------------------------------------------------------
+0.2.2 (first official release : 2017-06-13)
+-------------------------------------------
 * update of dependencies (Keras 2.0,...).
 * add of LightGBM model.
 
-dev 0.2.3 (non stable version, available on branch "2.3-dev")
+0.3.0 (2017-07-11)
+------------------
+* Python 2.7 & Python 3.4-3.6 compatibilities
+
+0.3.1 (2017-07-12)
+------------------
+* Availability on PyPI
+
+dev 0.4.0 (non stable version, available on branch "4.0-dev")
 -------------------------------------------------------------
 * add of pipeline memory.
-
-dev 0.3.0 (2017-07-03, available on branch "3.0-dev")
------------------------------------------------------
-* Python 2.6-2.7 & Python 3.3-3.6 compatibilities
