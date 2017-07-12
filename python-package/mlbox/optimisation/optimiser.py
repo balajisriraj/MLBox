@@ -60,11 +60,13 @@ class Optimiser():
         Verbose mode
 
     """
-    def __init__(self, scoring = None, n_folds = 2, random_state = 1, verbose = True):
+
+    def __init__(self, scoring = None, n_folds = 2, random_state = 1, to_path = "save", verbose = True):
 
         self.scoring = scoring
         self.n_folds = n_folds
         self.random_state = random_state
+	self.to_path = to_path
         self.verbose = verbose
 
 
@@ -72,8 +74,9 @@ class Optimiser():
 
         return {'scoring' : self.scoring,
                 'n_folds' : self.n_folds,
-               'random_state' : self.random_state,
-               'verbose' : self.verbose}
+                'random_state' : self.random_state,
+		'to_path' : self.to_path,
+                'verbose' : self.verbose}
 
 
     def set_params(self,**params):
